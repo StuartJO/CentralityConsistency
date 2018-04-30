@@ -89,7 +89,7 @@ for i = 1
     subplot(6,6,[15:18 21:24 27:30 34:36])
 
     if i == 5
-        load C:\Users\Stuart\Documents\MATLAB\air500locations.mat
+        load air500locations.mat
         airport_network_worldplot(Networks{i},air500labels,obj_cluster);
         colormap(cmap2);
         axis off
