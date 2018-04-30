@@ -1,6 +1,6 @@
 function p = airport_network_worldplot(adj,airports,nodecolours)
 
-load C:\Users\Stuart\Documents\MATLAB\airport_locations.mat
+load airport_locations.mat
 
 n = length(adj);
 airport_location = zeros(n,2);
