@@ -15,6 +15,8 @@ if ~iscell(Network)
     else
         NetCell{1} = Network; 
     end
+else
+    NetCell = Network;
 end
 
 NumNets = length(NetCell);
