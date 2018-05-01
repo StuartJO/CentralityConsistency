@@ -1,8 +1,22 @@
 function [M, P, Q] = run_modularity(adj,nMod,tau)
 
+% Runs a consensus approach to achieve determine a networks modularity
+%
+% Input:                            adj = adjacency mnatrix
+%                                  nMod = number of iterations
+%                                   tau = tau value
+%
+% Output:                             M = consensus module assignment
+%                                     P = participation coefficient
+%                                     Q = Modularity Q
+
+Q = zeros(1,nMod);
+
+M_temp = zeros(length(adj),nMod);
+
 for i = 1:nMod
 
-    [M_temp(:,i) Q(i)] = community_louvain(adj);
+    [M_temp(:,i), Q(i)] = community_louvain(adj);
     %fprintf('Completed %d\n',i)
 end
 

@@ -1,4 +1,29 @@
-function [centrality,Q,centrality_names,centrality_names_abbrev] = runCentrality(Network,invweighted,runparallel)
+function [centrality,Q,centrality_names,centrality_names_abbrev] = runCentrality(Network,invweighted,runparallel,quiet)
+
+% This script runs a number of different centrality measures for a network
+% or set of networks.
+%
+% Input:                   Network = an adjacency matrix or a cell where
+%                                    each cell is an adjacency matrix or a
+%                                    3D matrix where the third dimension is
+%                                    an individual network
+%                      invweighted = for weighted networks, invert the
+%                                    weights (no effect on unweighted)
+%                      runparallel = run in parallel if set to 1 (default
+%                                    is 0). Usefully when you have very
+%                                    large networks (> 1000 nodes)
+%
+% Output:               centrality = matrix of centrality scores or a cell
+%                                    array where each cell contains a 
+%                                    matrix of centrality scores
+%                                Q = the Q value for the modularity of the
+%                                    network
+%                 centrality_names = name of each centrality measure   
+%          centrality_names_abbrev = abbreviated name of each centrality 
+%                                    measure 
+%
+% The script will detect if the network is unweighted or weighted so it 
+% should be in that format before being passed to this function. 
 
 if nargin < 2
     invweighted = 0;
@@ -6,6 +31,10 @@ end
 
 if nargin < 3
     runparallel = 0;
+end
+
+if nargin < 4
+    quiet = 0;
 end
 
 if ~iscell(Network)
@@ -20,13 +49,13 @@ else
 end
 
 NumNets = length(NetCell);
-Q = zeros(NumNets);
+Q = zeros(1,NumNets);
 if NumNets > 2
     centrality = cell(1,NumNets);
 end
     
-for i = 1:length(NumNets)
-    adj = Network{1};
+for i = 1:NumNets
+    adj = Network{i};
     NumNodes = length(adj);
     c = zeros(15,NumNodes);
     if invweighted
@@ -57,9 +86,16 @@ for i = 1:length(NumNets)
     c(13,:) = random_walk_betweenness(adj,runparallel); 
     c(14,:) = communicability_betweenness(adj,runparallel); 
     [M, c(15,:)] = run_modularity(adj,50,.4);
+    
+    % The Q value is calculated on the consensus partition
+    
     Q(i) = modularity_q(adj,M);
+    
     if NumNets > 2
         centrality{i} = c;
+        if ~quiet
+           fprintf('Completed centrality analysis of network %d\n',i) 
+        end
     else
         centrality = c;
     end
