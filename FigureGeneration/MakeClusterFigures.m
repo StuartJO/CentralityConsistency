@@ -3,7 +3,7 @@
 
 varsbefore = who;
 
-for i = 1
+for i = 5
 
     % Initialize variables
     
@@ -94,7 +94,7 @@ for i = 1
         colormap(cmap2);
         axis off
     elseif ismember(i,[14 15])
-        COG = dlmread('HCPMMP1ANDfslatlas20_MNILinear_COGflippedX.txt');
+        COG = dlmread('BrainNodeCoords.txt');
         G = graph(Networks{i});
         g = plot(G,'Xdata',COG(:,1),'YData',COG(:,2));
         g.NodeCData = obj_cluster;

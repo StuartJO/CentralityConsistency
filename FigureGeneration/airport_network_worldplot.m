@@ -10,14 +10,8 @@ for i = 1:n
     airportname{i} = Airport_fullname{Index};
 end
   
-n = max(nodecolours);
-
-%close all
 hold on
 landareas = geoshow('landareas.shp','FaceColor',[1 1 1],'DisplayType', 'texturemap');
-%h1 = scatter(airport_location(:,2),airport_location(:,1),'.k');
-% h1 = scatter(airport_location(:,2),airport_location(:,1));
-% uistack(h1,'top')
 
 g = graph(adj);
 p = plot(g,'Xdata',airport_location(:,2),'Ydata',airport_location(:,1));
@@ -28,9 +22,5 @@ p.MarkerSize = 4;
 
 p.EdgeColor = [.5 .5 .5];
 
-% c = lines(n);
-% c = [.5 .5 .5; c];
-% colormap(c);
-% colorbar
 xlim([-180 180])
 ylim([-90 90])
