@@ -8,10 +8,20 @@ function b = random_walk_betweenness(A,parallel)
 % This measure is only currently working for unweighted, undirected
 % networks. 
 %
-%   Input                               A = adjacency matrix
+% Inputs:                               A = adjacency matrix
+%                                parallel = set to 1 to use MATLABS 
+%                                           parallel processing toolbox (if
+%                                           installed)                    
 %
-%   Output                              b = a vector containing each nodes
-%                                       random-walk betweenness centrality
+% Output:                               b = a vector containing each nodes
+%                                           random-walk betweenness 
+%                                           centrality
+
+% Check if parallel toolbox is installed
+if ~license( 'test', 'Distrib_Computing_Toolbox' )
+    warning('Parallel processing toolbox not installed') 
+    parallel = 0;
+end
 
 % Obtain the number of nodes
 n = length(A);

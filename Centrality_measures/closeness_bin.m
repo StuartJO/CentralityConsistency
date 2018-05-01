@@ -1,5 +1,15 @@
 function c = closeness_bin(A,alt)
 
+% This function calculates unweighted closeness centrality of a network A
+% using functions from the Brain Connectivity Toolbox.
+%
+% Inputs:                               A = adjecency matrix
+%                                     alt = alternative version of
+%                                           closeeness centrality (nodal
+%                                           efficiency)
+% 
+% Output:                               C = closeness centrality
+
 if nargin < 2
     alt = 0;
 end

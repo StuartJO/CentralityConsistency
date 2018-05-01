@@ -3,7 +3,7 @@
 
 varsbefore = who;
 
-for i = 5
+for i = 1:NumNetworks
 
     % Initialize variables
     

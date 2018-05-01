@@ -34,11 +34,10 @@ if sum(comp) ~= length(comp)
     error('The transition matrix is not irreducible!')
 end
 
-
 % Make identity matrix
 I = eye(n);
 
-% As sM=s, it can also be written s(M-I)=O or sA=O (O is a 1xn null
+% As sM=s, it can also be written s(M-I)=O or sA=O (O is a 1*n null
 % matrix). There are many, many different possible solutions so an extra 
 % equation is needed to find a unique solution. As sum(s)=1, this can be 
 % substituted into sA=O by replacing column i in A with 1s as well as 
@@ -53,11 +52,11 @@ A(:,end) = ones(n,1);
 O = zeros(1,n);
 O(end) = 1;
 
+% Find the steady state
 s = O/A;
 
 % Creates a matrix S where each row is a repeat of the array s element 
 % (s(i) = S(:,i))
-
 S = repmat(s,n,1); 
 
 % Compute the fundamental matrix Z
@@ -69,7 +68,6 @@ Z = inv(I-M+S);
 % then be subtracted from this matrix and each element will now be
 % (Z(j,j) - Z(i,j)). This can now be divided on an elemental basis as
 % S(:,j) = s(j) 
-
 H = (repmat(diag(Z)',n,1)-Z)./S; 
 
 % Equation 5 in Blochl et al., 2011
