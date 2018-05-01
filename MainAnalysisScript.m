@@ -31,17 +31,17 @@ load('Networks.mat')
 NumNetworks = length(Networks);
 %% Perform centrality measures on each real-world network
 
-[NetworksCent,NetworksQ,cent_names,cent_names_abbrev] = runCentrality(Networks,1); 
-
-NullNetworks = cell(NumNetworks,2);
-NullsMgap = cell(NumNetworks,2);
-NullNetworksCent = cell(NumNetworks,2);
-NullsQ = cell(NumNetworks,2);
+[NetworksCent,NetworksQ,cent_names,cent_names_abbrev] = runCentrality(Networks,1,1); 
 
 %% Calculate network density, majorization gap and normalise centrality
 % scores for clustering
 
-for i = 1:15
+NormCentAll = cell(1,NumNetworks);
+NormCentNoRWCC = cell(1,NumNetworks);
+NetworksDensity = zeros(1,NumNetworks);
+NetworksMgap = zeros(1,NumNetworks);
+
+for i = 1:NumNetworks
     NormCentAll{i} = BF_NormalizeMatrix(NetworksCent{i}','scaledSigmoid');
     NormCentNoRWCC{i} = NormCentAll{i}(:,[1:6 8:15]);
     NetworksDensity(i) = density_und(Networks{i});
@@ -51,7 +51,12 @@ end
 %% Create unconstrained nulls for each network. This step also generates the
 % majorization gap for the unconstrained networks
 
-for i = 1:15
+NullNetworks = cell(NumNetworks,2);
+NullsMgap = cell(NumNetworks,2);
+NullNetworksCent = cell(NumNetworks,2);
+NullsQ = cell(NumNetworks,2);
+
+for i = 1:NumNetworks
     Nulls = cell(1,NumNulls);
     Mgap = zeros(1,NumNulls);
     adj = Networks{i};
@@ -67,7 +72,7 @@ end
 % This step also generates the majorization gap for the constrained 
 % networks
 
-for i = 1:15
+for i = 1:NumNetworks
     Nulls = cell(1,NumNulls);
     Mgap = zeros(1,NumNulls);
     adj = Networks{i};
@@ -82,15 +87,21 @@ end
 %% Run centrality for the nulls. 
 % This also generates modularity for each null
 
-for i = 1:15
+for i = 1:NumNetworks
    for j = 1:2
-       [NullNetworksCent{i,j},NullsQ{i,j}] = runCentrality(NullNetworks,1); 
+       [NullNetworksCent{i,j},NullsQ{i,j}] = runCentrality(NullNetworks{i,j},1,1);
+       fprintf('Completed %d/2 nulls for network %d/%d\n',j,i,NumNetworks) 
    end
 end
 
 %% Perform clustering
 
-for i = 1:15   
+NetworksLinkages = cell(1,NumNetworks);
+NetworksCentClustDist = cell(1,NumNetworks);
+NetworksCentClusters = cell(1,NumNetworks);
+NetworksDB = cell(1,NumNetworks);
+
+for i = 1:NumNetworks   
     [NetworksLinkages{i}, NetworksCentClustDist{i}, NetworksCentClusters{i}, NetworksDB{i}] = runCentralityClustering(NormCentNoRWCC{i});  
 end
 
@@ -130,6 +141,9 @@ ModularityPartialPval = ModularityPartialPval(1,2);
 [MgapPartialCorrelation,MgapPartialPval] = partialcorr([M(:,3) Networks_mwCMC'],M(:,2),'Type','Spearman');
 MgapPartialCorrelation = MgapPartialCorrelation(1,2);
 MgapPartialPval = MgapPartialPval(1,2);
+
+NetworksCentCorr = zeros(length(cent_names),length(cent_names),NumNetworks);
+NetworksCentCorrCell = cell(1,NumNetworks);
 
 % Calculate the CMCs for each network
 for i = 1:15
