@@ -10,3 +10,5 @@ Dependencies:
 MainAnalysisScript.m will run all analyses performed in the paper. Running this script as is will take a very long time especially for the running of centrality measures and generation of nulls/synthetic networks. If you have access to a cluster I recommend the analysis of individual networks across computers.
 
 FigureGeneration.m will reproduce all figures from the paper.
+
+The data used in the paper can be found [here](https://figshare.com/s/22c5b72b574351d03edf)
