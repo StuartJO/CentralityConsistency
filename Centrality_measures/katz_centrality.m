@@ -9,13 +9,12 @@ function c_Katz = katz_centrality(adj,a,b)
 
 A = double(adj > 0);
 n = length(A);
-directed=sum(sum(A==A'))<n^2;
 invmaxeig = 1/max(eig(A));
 
 if nargin < 2
    % a is set to be 10% less than the inverse of the largest eigenvalue
    a = .9*invmaxeig;
-   fprintf('a has been set to %.3f\n',a)
+   % fprintf('a has been set to %.3f\n',a)
 end
 
 if nargin < 3

@@ -12,7 +12,6 @@ function com_bet = communicability_betweenness(adj,parallel)
     C = (n-1)^2 - (n-1);
     
     if parallel
-        tic
         com_bet = cell(n,1);
         parfor r = 1:n
             Er = A;
@@ -26,9 +25,7 @@ function com_bet = communicability_betweenness(adj,parallel)
             com_bet{r} = (sum(sum(GprqGpq))-sum(diag(GprqGpq)))/C;
         end
         com_bet = cell2mat(com_bet);
-        toc
     else  
-%         tic
 %         com_bet = zeros(n,1);
 %         for r = 1:n
 %             Er = A;
