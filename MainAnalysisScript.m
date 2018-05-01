@@ -11,20 +11,27 @@
 % This code requires dependencies from the Brain Connectivity Toolbox
 
 
+% Note that subtle differences may result if trying to recalculate the
+% centrality measures as the calculation of the participation coefficient
+% involves stochastic procedures
 %% Initial setup
-MAINPATH = 'C:\Users\Stuart\Dropbox\PhD\Centrality_code';
+% Define these variables for your own environment and desired parameters
+% Define path to the directory of this script
+MAINPATH = 'C:/Users/Stuart/Dropbox/PhD/Centrality_code';
+% Define path to the directory of the BCT
 BCTPATH = 'C:/Users/Stuart/Documents/MATLAB/BCT/';
-
-addpath(genpath(MAINPATH))
-addpath(genpath(BCTPATH))
-
-NumNulls = 1;
+% Define the number of nulls to generate
+NumNulls = 100;
+% Define the number of clusters to calculate
 numclust = 50;
 
-%% load Networks
+%% Define paths and load networks
 % Will load in 3 variables: Networks, a cell array of the networks;
 % net_fullName, the name of the network; net_abbrevname, abbreviated
 % network name
+
+addpath(genpath(MAINPATH))
+addpath(genpath(BCTPATH))
 
 load('Networks.mat')
 
@@ -36,9 +43,15 @@ NumNetworks = length(Networks);
 %% Calculate network density, majorization gap and normalise centrality
 % scores for clustering
 
+% NormCentAll is the normalised centrality scores for all measures in 
+% each network
 NormCentAll = cell(1,NumNetworks);
+% NormCentNoRWCC is the normalised centrality scores for all measures apart 
+% from random-walk closeness in each network
 NormCentNoRWCC = cell(1,NumNetworks);
+% NetworksDensity is each networks density
 NetworksDensity = zeros(1,NumNetworks);
+% NetworksMgap is each networks majorization gap
 NetworksMgap = zeros(1,NumNetworks);
 
 for i = 1:NumNetworks
@@ -111,6 +124,27 @@ M(:,1) = NetworksDensity';
 M(:,2) = NetworksQ';
 M(:,3) = NetworksMgap';
 
+Networks_mwCMC = zeros(1,NumNetworks);
+NullNetworks_mwCMC = cell(NumNetworks,2);
+
+NetworksCentCorr = zeros(length(cent_names),length(cent_names),NumNetworks);
+NetworksCentCorrCell = cell(1,NumNetworks);
+
+% Calculate the CMCs for each network
+for i = 1:NumNetworks
+   NetworksCentCorr(:,:,i) = corr(NetworksCent{i}','Type','Spearman'); 
+   NetworksCentCorrCell{i} = NetworksCentCorr(:,:,i); 
+   Networks_mwCMC(i) = mean(triu2vec(NetworksCentCorrCell{i},1));
+    for j = 1:2
+        temp = zeros(1,NumNulls);
+        for k = 1:NumNulls
+            temp(k) = mean(triu2vec(corr(NullNetworksCent{i,j}{k}','Type','Spearman'),1));
+        end   
+        NullNetworks_mwCMC{i,j} = temp;
+        clear temp
+    end
+end
+
 % DensityCorrelation is the correlation between network density and mean
 % within-network CMC and DensityPval is the associated p value
 [DensityCorrelation,DensityPval] = corr(Networks_mwCMC',M(:,1),'Type','Spearman');
@@ -141,15 +175,6 @@ ModularityPartialPval = ModularityPartialPval(1,2);
 [MgapPartialCorrelation,MgapPartialPval] = partialcorr([M(:,3) Networks_mwCMC'],M(:,2),'Type','Spearman');
 MgapPartialCorrelation = MgapPartialCorrelation(1,2);
 MgapPartialPval = MgapPartialPval(1,2);
-
-NetworksCentCorr = zeros(length(cent_names),length(cent_names),NumNetworks);
-NetworksCentCorrCell = cell(1,NumNetworks);
-
-% Calculate the CMCs for each network
-for i = 1:15
-   NetworksCentCorr(:,:,i) = corr(NetworksCent{i}','Type','Spearman'); 
-   NetworksCentCorrCell{i} = NetworksCentCorr(:,:,i); 
-end
 
 % Get the mean between-network CMC's and between-network CMC standard
 % deviations across all networks
@@ -186,7 +211,7 @@ var_corr_wei = std(NetworksCentCorr(:,:,weighted_network_inds),0,3);
 
 cent_ind = BF_ClusterReorder(mean_corr_all,'corr');
 
-clear i j Nulls
+clear i j Nulls tempW k
 
 % Note if trying to save output you will likely need the -v7.3 flag if you
 % have generated a large number of nulls

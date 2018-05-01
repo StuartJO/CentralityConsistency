@@ -10,6 +10,8 @@ addpath(MAINPATH)
 
 % Set the clusters to select for the clustering pictures
 
+% Note the colormap only works for up to 10 clusters 
+
 use_clusters = [4 3 5 10 8 6 6 3 6 5 7 8 3 3 4];
 
 %% Initial setup of variable required
@@ -53,6 +55,9 @@ MakeFigure5
 MakeFigure6
 
 %% Figure 7-8, S3-S15
+
+% Note when making the figure of the airport network it will flash up a
+% warning. Figure will produce just fine however.
 
 MakeClusterFigures
 
