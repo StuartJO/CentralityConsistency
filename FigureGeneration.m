@@ -2,10 +2,10 @@
 % generated based are the data obtained. Other figures were created
 % manually in powerpoint using an excessive amount of autoshapes
 
-% This script requires the outputs of MainAnalysisScript.m to be loaded 
-% in the workspace
-
 % This script also uses colormaps from cbrewer
+
+% This script requires the outputs of MainAnalysisScript.m to be loaded in
+% the Workspace
 
 MAINPATH = './Centrality_code';
 
@@ -66,5 +66,5 @@ MakeClusterFigures
 
 %% Figure S1
 
-MakeFigureS2
-print('FigureS2.png','-dpng')
+MakeFigureS1
+print('Figures1.png','-dpng')

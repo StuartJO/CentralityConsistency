@@ -1,6 +1,8 @@
 % Main analysis script
 
-% This script will rerun all analysis performed in
+% This script will rerun all analysis performed in Oldham et al., 2018. 
+% Consistency and differences between centrality metrics across distinct 
+% classes of networks.
 
 % Running this script as is will be incredible computationally expensive
 % and would likely take months running on a single computer. It would
@@ -21,7 +23,7 @@
 % Define path to the directory of this script
 MAINPATH = '../Centrality_code';
 % Define path to the directory of the BCT
-BCTPATH = 'C:/Users/Stuart/Documents/MATLAB/BCT/';
+BCTPATH = 'C:/Users/USER/Documents/MATLAB/BCT/';
 % Define the number of nulls to generate
 NumNulls = 100;
 % Define the number of clusters to calculate
