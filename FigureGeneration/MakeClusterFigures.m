@@ -8,6 +8,7 @@ for i = 1:NumNetworks
     % Initialize variables
     
     dataMatrix = NormCentAll{i};
+    dataMatrix2 = NormCentNoRWCC{i};
     Z = NetworksLinkages{i}; 
     D = NetworksCentClustDist{i};
     Hclusters = NetworksCentClusters{i};
@@ -25,7 +26,7 @@ for i = 1:NumNetworks
     cluster_mean = zeros(use_clusters(i),1);
 
     for j = 1:use_clusters(i)
-        cluster_mean(j) = mean(mean(dataMatrix(chosen_clusters==j,:)));
+        cluster_mean(j) = mean(mean(dataMatrix2(chosen_clusters==j,:)));
     end
 
     [~,mean_cluster_order] = sort(cluster_mean,'descend');
@@ -124,7 +125,7 @@ for i = 1:NumNetworks
         axis off
     end
 
-%  print(sprintf('%s_clusterfig.png',net_abbrevname{i}),'-dpng')
+print(sprintf('%s_clusterfig.png',net_abbrevname{i}),'-dpng')
 
 end
 

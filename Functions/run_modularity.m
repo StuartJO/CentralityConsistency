@@ -9,6 +9,8 @@ function [M, P, Q] = run_modularity(adj,nMod,tau)
 % Output:                             M = consensus module assignment
 %                                     P = participation coefficient
 %                                     Q = Modularity Q
+%
+% Stuart Oldham, Monash University, 2017
 
 Q = zeros(1,nMod);
 

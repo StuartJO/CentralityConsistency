@@ -35,25 +35,25 @@ netcolor{15} = lines_colormap(4,:);
 %% Figure 2
 
 MakeFigure2_top
-
+print('Figure2top.png','-dpng')
 MakeFigure2_bottom
-
+print('Figure2bottom.png','-dpng')
 %% Figure 3
 
 MakeFigure3
-
+print('Figure3.png','-dpng')
 %% Figure 4
 
 MakeFigure4
-
+print('Figure4.png','-dpng')
 %% Figure 5
 
 MakeFigure5
-
+print('Figure5.png','-dpng')
 %% Figure 6
 
 MakeFigure6
-
+print('Figure6.png','-dpng')
 %% Figure 7-8, S3-S15
 
 % Note when making the figure of the airport network it will flash up a
@@ -64,3 +64,4 @@ MakeClusterFigures
 %% Figure S1
 
 MakeFigureS1
+print('Figures1.png','-dpng')

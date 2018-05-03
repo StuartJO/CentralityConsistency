@@ -16,6 +16,8 @@ function b = random_walk_betweenness(A,parallel)
 % Output:                               b = a vector containing each nodes
 %                                           random-walk betweenness 
 %                                           centrality
+%
+% Stuart Oldham, Monash University, 2017
 
 % Check if parallel toolbox is installed
 if ~license( 'test', 'Distrib_Computing_Toolbox' )

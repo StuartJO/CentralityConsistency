@@ -22,7 +22,8 @@ function G = communicability(A,weighted,measure)
 %
 %   Output:                 G = the desired output specified by the
 %                           variable 'measure'
-
+%
+% Stuart Oldham, Monash University, 2017
 if nargin < 2
     weighted = 0;
 end

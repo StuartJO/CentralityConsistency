@@ -1,12 +1,14 @@
-function [Z, D, Hclusters, DB_vals] = runCentralityClustering(dataMatrix)
+function [Z, D, Hclusters, DB_vals] = runCentralityClustering(dataMatrix,NumClust)
 
-if length(dataMatrix) < 50
-    numclust = length(dataMatrix);
-else
-numclust = 50;
+if nargin < 2
+    NumClust = 50;
 end
 
-Hclusters = zeros(size(dataMatrix,1),numclust);
+if length(dataMatrix) < 50
+    NumClust = size(dataMatrix,1);
+end
+
+Hclusters = zeros(size(dataMatrix,1),NumClust);
 
 Z = linkage(dataMatrix,'ward','euclidean');
 
@@ -15,7 +17,7 @@ p = squareform(Y);
 
 D = p;
 
-for x = 1:numclust
+for x = 1:NumClust
   Hclusters(:,x) = cluster(Z,'MaxClust',x); 
 end   
 

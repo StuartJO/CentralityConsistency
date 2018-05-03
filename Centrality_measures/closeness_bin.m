@@ -9,7 +9,8 @@ function c = closeness_bin(A,alt)
 %                                           efficiency)
 % 
 % Output:                               C = closeness centrality
-
+%
+% Stuart Oldham, Monash University, 2017
 if nargin < 2
     alt = 0;
 end

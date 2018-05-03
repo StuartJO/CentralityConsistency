@@ -24,6 +24,8 @@ function [centrality,Q,centrality_names,centrality_names_abbrev] = runCentrality
 %
 % The script will detect if the network is unweighted or weighted so it 
 % should be in that format before being passed to this function. 
+%
+% Stuart Oldham, Monash University, 2018
 
 if nargin < 2
     invweighted = 0;

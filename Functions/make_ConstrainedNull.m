@@ -1,5 +1,7 @@
 function Null = make_ConstrainedNull(adj)
 
+
+
 if max(max(adj)) ~= 1
     weighted = 1;
 else

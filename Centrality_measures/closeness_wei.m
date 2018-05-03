@@ -10,7 +10,8 @@ function c = closeness_wei(A,invert,alt)
 %                                           efficiency)
 % 
 % Output:                               C = closeness centrality
-
+%
+% Stuart Oldham, Monash University, 2017
 if nargin < 2
     invert = 0;
 end

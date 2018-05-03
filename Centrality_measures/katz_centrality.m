@@ -1,11 +1,17 @@
 function c_Katz = katz_centrality(adj,a,b)
 
-% INPUTS:                   adj = an N*N adjacency matrix where adj(i,j)
+% This function computes Katz centrality for a network
+%
+% inputs:                   adj = an N*N adjacency matrix where adj(i,j)
 %                                 indicates i is the source and j is the
 %                                 target
+%                           a   = alpha value (optional, defaults to .9 of
+%                                 the largest eigenvalue
+%                           b   = beta value (optional, defaults to 1)
+% 
+% output:                c_Katz = a vector of each nodes Katz Centrality
 %
-%                           a   = alpha value
-
+% Stuart Oldham, Monash University, 2017
 
 A = double(adj > 0);
 n = length(A);

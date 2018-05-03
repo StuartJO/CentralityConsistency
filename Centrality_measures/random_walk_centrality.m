@@ -13,8 +13,8 @@ function [RWC,H] = random_walk_centrality(adj)
 %                                 network. H(i,j) indicates the average
 %                                 number of steps a random walker takes to
 %                                 reach node j from i
-
-
+%
+% Stuart Oldham, Monash University, 2017
 
 % Make markov chain 
 M = diag(1./sum(adj,2))*adj;

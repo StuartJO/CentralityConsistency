@@ -14,6 +14,8 @@ function cinf = information_centrality(A,alt)
 % As shown in https://pdfs.semanticscholar.org/0eb8/54ff50f1b647867c5d59d8ade4690ac8ea2c.pdf, 
 % the same rank order of nodes by information centrality can be produced by
 % the equation 1./diag(C) becuase all other paths are constants 
+%
+% Stuart Oldham, Monash University, 2017
 
 if nargin < 2
     alt = 0;

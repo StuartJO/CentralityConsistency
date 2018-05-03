@@ -9,6 +9,8 @@ function h = h_index(input)
 
 % Calculate strength (for a weighted network) or degree (for an unweighted 
 % network)
+%
+% Stuart Oldham, Monash University, 2017
 
 % If the input is a vector calculate the h-index of that
 if isvector(input)

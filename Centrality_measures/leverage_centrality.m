@@ -7,6 +7,9 @@ function l = leverage_centrality(adj)
 %
 % Output:               l = a vector containing each node's leverage
 %                       centrality
+%
+% Stuart Oldham, Monash University, 2017
+
 str = sum(adj);
 l = zeros(1,length(adj));
 for i = 1:length(adj)

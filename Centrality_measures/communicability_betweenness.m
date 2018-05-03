@@ -12,6 +12,8 @@ function com_bet = communicability_betweenness(adj,parallel)
 % Output:                             b = a vector containing each nodes
 %                                           communicability betweenness 
 %                                           centrality
+%
+% Stuart Oldham, Monash University, 2017
 
 if nargin < 2
     parallel = 0;

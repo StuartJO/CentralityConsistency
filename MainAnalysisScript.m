@@ -10,20 +10,22 @@
 
 % This code requires dependencies from the Brain Connectivity Toolbox
 
-
 % Note that subtle differences may result if trying to recalculate the
 % centrality measures as the calculation of the participation coefficient
-% involves stochastic procedures
+% involves stochastic procedures. This differences will affect the
+% correlations and clustering results but the differences will be very
+% slight
+
 %% Initial setup
 % Define these variables for your own environment and desired parameters
 % Define path to the directory of this script
-MAINPATH = 'C:/Users/Stuart/Dropbox/PhD/Centrality_code';
+MAINPATH = '../Centrality_code';
 % Define path to the directory of the BCT
 BCTPATH = 'C:/Users/Stuart/Documents/MATLAB/BCT/';
 % Define the number of nulls to generate
 NumNulls = 100;
 % Define the number of clusters to calculate
-numclust = 50;
+NumClust = 50;
 
 %% Define paths and load networks
 % Will load in 3 variables: Networks, a cell array of the networks;
@@ -38,16 +40,25 @@ load('Networks.mat')
 NumNetworks = length(Networks);
 %% Perform centrality measures on each real-world network
 
+% NetworksCent is the centrality scores for each network (stored in a cell)
+
+% NetworksQ is each networks modularity Q index
+
+% cent_names is a cell array containing the name of each centrality measure
+
+% cent_names_abbrev is a cell array containing the abbreviated name of each 
+% centrality measure
+
 [NetworksCent,NetworksQ,cent_names,cent_names_abbrev] = runCentrality(Networks,1,1); 
 
 %% Calculate network density, majorization gap and normalise centrality
 % scores for clustering
 
 % NormCentAll is the normalised centrality scores for all measures in 
-% each network
+% each network (stored in a cell)
 NormCentAll = cell(1,NumNetworks);
 % NormCentNoRWCC is the normalised centrality scores for all measures apart 
-% from random-walk closeness in each network
+% from random-walk closeness in each network (stored in a cell)
 NormCentNoRWCC = cell(1,NumNetworks);
 % NetworksDensity is each networks density
 NetworksDensity = zeros(1,NumNetworks);
@@ -63,6 +74,26 @@ end
 
 %% Create unconstrained nulls for each network. This step also generates the
 % majorization gap for the unconstrained networks
+
+% NullNetworks is a cell array where column 1 contains the 
+% unconstrained nulls for each respective network and column 2 contains the
+% constrained nulls for each respective network (each null is stored as its
+% own cell) 
+
+% NullsMgap is a cell array where column 1 contains the majorization gap
+% for each unconstrained null for each respective network and column
+% 2 contains the majorization gap for each constrained null for each
+% respective network (the modularity Q index is stored as a vector) 
+
+% NullNetworksCent is a cell array where column 1 contains the centrality 
+% scores for each unconstrained null for each respective network and column
+% 2 contains the centrality scores for each constrained null for each
+% respective network (and each individual null is also stored in a cell)  
+
+% NullsQ is a cell array where column 1 contains the modularity Q index
+% for each unconstrained null for each respective network and column
+% 2 contains the modularity Q index for each constrained null for each
+% respective network (the modularity Q index is stored as a vector) 
 
 NullNetworks = cell(NumNetworks,2);
 NullsMgap = cell(NumNetworks,2);
@@ -80,6 +111,7 @@ for i = 1:NumNetworks
     NullsMgap{i,1} = Mgap;
     NullNetworks{i,1} = Nulls;
 end
+clear Mgap Nulls
 
 %% Create constrained nulls for each network. 
 % This step also generates the majorization gap for the constrained 
@@ -109,24 +141,38 @@ end
 
 %% Perform clustering
 
+% NetworksLinkages is the linkages for each network
 NetworksLinkages = cell(1,NumNetworks);
+% NetworksCentClustDist is the distance matrix of the clusters for each 
+% network
 NetworksCentClustDist = cell(1,NumNetworks);
+% NetworksCentClusters is a cell array where each cell is a matrix of
+% clustering solutions for each network
 NetworksCentClusters = cell(1,NumNetworks);
+% NetworksDB is a cell array where each cell is the Davies-Bouldin indices
+% for each of the identified clusters
 NetworksDB = cell(1,NumNetworks);
 
 for i = 1:NumNetworks   
-    [NetworksLinkages{i}, NetworksCentClustDist{i}, NetworksCentClusters{i}, NetworksDB{i}] = runCentralityClustering(NormCentNoRWCC{i});  
+    [NetworksLinkages{i}, NetworksCentClustDist{i}, NetworksCentClusters{i}, NetworksDB{i}] = runCentralityClustering(NormCentNoRWCC{i},50);
 end
 
 %% Get correlations, averages and standard deviations
 
-M(:,1) = NetworksDensity';
-M(:,2) = NetworksQ';
-M(:,3) = NetworksMgap';
+% NetworkProperty is just the different network properties combined into a
+% single table
+NetworkProperty(:,1) = NetworksDensity';
+NetworkProperty(:,2) = NetworksQ';
+NetworkProperty(:,3) = NetworksMgap';
 
+% Networks_mwCMC is the mean within-networks CMC for each network
+% NullNetworks_mwCMC is the mean within-networks CMC for each null network
 Networks_mwCMC = zeros(1,NumNetworks);
 NullNetworks_mwCMC = cell(NumNetworks,2);
 
+% NetworksCentCorr is a 3D matrix of the correlation matrices of centrality
+% measures for each network (arranged along the third dimension)
+% NetworksCentCorrCell is a cell array containing each networks CMCs
 NetworksCentCorr = zeros(length(cent_names),length(cent_names),NumNetworks);
 NetworksCentCorrCell = cell(1,NumNetworks);
 
@@ -138,7 +184,11 @@ for i = 1:NumNetworks
     for j = 1:2
         temp = zeros(1,NumNulls);
         for k = 1:NumNulls
+            % Note that if for some reason you generate only a single null
+            % then the code will get upset with you here because it expects
+            % a cell array. The commented line will fix this
             temp(k) = mean(triu2vec(corr(NullNetworksCent{i,j}{k}','Type','Spearman'),1));
+            %temp(k) = mean(triu2vec(corr(NullNetworksCent{i,j}','Type','Spearman'),1));
         end   
         NullNetworks_mwCMC{i,j} = temp;
         clear temp
@@ -147,32 +197,32 @@ end
 
 % DensityCorrelation is the correlation between network density and mean
 % within-network CMC and DensityPval is the associated p value
-[DensityCorrelation,DensityPval] = corr(Networks_mwCMC',M(:,1),'Type','Spearman');
+[DensityCorrelation,DensityPval] = corr(Networks_mwCMC',NetworkProperty(:,1),'Type','Spearman');
 
 % DensityCorrelation2 is the correlation between network density and mean
 % within-network CMC when the two outlier networks are removed and 
 % DensityPval2 is the associated p value
-[DensityCorrelation2,DensityPval2] = corr(Networks_mwCMC([1:7 9:12 14 15])',M([1:7 9:12 14 15],1),'Type','Spearman');
+[DensityCorrelation2,DensityPval2] = corr(Networks_mwCMC([1:7 9:12 14 15])',NetworkProperty([1:7 9:12 14 15],1),'Type','Spearman');
 
 % ModularityCorrelation is the correlation between modularity and mean
 % within-network CMC and ModularityPval is the associated p value
-[ModularityCorrelation,ModularityPval] = corr(Networks_mwCMC',M(:,2),'Type','Spearman');
+[ModularityCorrelation,ModularityPval] = corr(Networks_mwCMC',NetworkProperty(:,2),'Type','Spearman');
 
 % ModularityPartialCorrelation is the partial correlation between 
 % modularity and mean within-network CMC controlling for the majorization 
 % gap and ModularityPartialPval is the associated p value
-[ModularityPartialCorrelation,ModularityPartialPval] = partialcorr([M(:,2) Networks_mwCMC'],M(:,3),'Type','Spearman');
+[ModularityPartialCorrelation,ModularityPartialPval] = partialcorr([NetworkProperty(:,2) Networks_mwCMC'],NetworkProperty(:,3),'Type','Spearman');
 ModularityPartialCorrelation = ModularityPartialCorrelation(1,2);
 ModularityPartialPval = ModularityPartialPval(1,2);
 
 % MgapCorrelation is the correlation between the majorization gap and mean
 % within-network CMC and MgapPval is the associated p value
-[MgapCorrelation,MgapPval] = corr(Networks_mwCMC',M(:,3),'Type','Spearman');
+[MgapCorrelation,MgapPval] = corr(Networks_mwCMC',NetworkProperty(:,3),'Type','Spearman');
 
 % MgapPartialCorrelation is the partial correlation between the
 % majorization gap and mean within-network CMC controlling for modularity
 % and ModularityPartialPval is the associated p value
-[MgapPartialCorrelation,MgapPartialPval] = partialcorr([M(:,3) Networks_mwCMC'],M(:,2),'Type','Spearman');
+[MgapPartialCorrelation,MgapPartialPval] = partialcorr([NetworkProperty(:,3) Networks_mwCMC'],NetworkProperty(:,2),'Type','Spearman');
 MgapPartialCorrelation = MgapPartialCorrelation(1,2);
 MgapPartialPval = MgapPartialPval(1,2);
 
@@ -181,8 +231,9 @@ MgapPartialPval = MgapPartialPval(1,2);
 mean_corr_all = mean(NetworksCentCorr,3);
 var_corr_all = var(NetworksCentCorr,0,3);
 
-% Get the index of unweighted networks (bin_ind) and weighted networks
-% (wei_ind)
+% Get the index of unweighted networks (unweighted_network_inds) and 
+% weighted networks (weighted_network_inds)
+
 unweighted_network_inds = [1:10 14];
 
 weighted_network_inds = [11:13 15];
@@ -211,7 +262,7 @@ var_corr_wei = std(NetworksCentCorr(:,:,weighted_network_inds),0,3);
 
 cent_ind = BF_ClusterReorder(mean_corr_all,'corr');
 
-clear i j Nulls tempW k
+clear i j k
 
 % Note if trying to save output you will likely need the -v7.3 flag if you
 % have generated a large number of nulls

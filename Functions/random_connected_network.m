@@ -29,6 +29,8 @@ function [A,Edges] = random_connected_network(N,E,W,quiet)
 %
 % Output:       A                   A fully connected random network
 % 
+%
+% Stuart Oldham, Monash University, 2017
 
 if ~ismatrix(N) && length(N) > 1
     error('Unrecognised input for N')
