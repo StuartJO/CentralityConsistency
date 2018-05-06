@@ -160,10 +160,13 @@ r = rand(N) + MST;
 
 R = triu(r,1) + triu(r,1)';
 
-% Sort all the upper values in R in a vector such that larger numbers are 
-% first and get the index of these ordered values
+% Get a vector of the values and positon of the upper triangle elements in
+% R. Then sort these values from largest to smallest and the respective
+% ordering
 
-[~,ind] = sort(triu2vec(R,1),'descend');
+[R_vec,R_vec_ord] = triu2vec(R,1);
+
+[~,ind] = sort(R_vec,'descend');
 
 % Find the index of edges to include. This will result in exactly E edges
 % being included in the network. You could make it so all edges above/below
@@ -172,7 +175,7 @@ R = triu(r,1) + triu(r,1)';
 % edges to be generated I think adding in a specific number of edges is
 % more appropriate
 
-IncludedEdges = ind(1:Edges);
+IncludedEdges = R_vec_ord(ind(1:Edges));
 
 % Set all included edges to 1 and make the matrix symmetrical
 
