@@ -7,7 +7,7 @@ function [Enod,d] = nodal_efficiency(adj)
 
 d = distance_wei(adj);
 N = length(adj);
-
-Enod = sum(1./d) ./ (N-1);
+d(d==0) = nan;
+Enod = nansum(1./d) ./ (N-1);
 
 end
