@@ -6,5 +6,5 @@ function [vec,ind] = triu2vec(mat,k)
 onesmat = ones(size(mat));
 UT = triu(onesmat,k);
 vec = mat(UT == 1);
-ind = UT == 1;
+ind = find(UT == 1);
 end
