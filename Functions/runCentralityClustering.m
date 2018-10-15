@@ -13,9 +13,7 @@ Hclusters = zeros(size(dataMatrix,1),NumClust);
 Z = linkage(dataMatrix,'ward','euclidean');
 
 Y = pdist(dataMatrix,'euclidean');
-p = squareform(Y);
-
-D = p;
+D = squareform(Y);
 
 for x = 1:NumClust
   Hclusters(:,x) = cluster(Z,'MaxClust',x); 

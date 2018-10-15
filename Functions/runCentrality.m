@@ -1,4 +1,4 @@
-function [centrality,Q,centrality_names,centrality_names_abbrev] = runCentrality(Network,invweighted,runparallel,quiet)
+function [centrality,Q,centrality_names,centrality_names_abbrev] = runCentrality(Network,weighted,runparallel,quiet,exclude)
 
 % This script runs a number of different centrality measures for a network
 % or set of networks.
@@ -7,8 +7,12 @@ function [centrality,Q,centrality_names,centrality_names_abbrev] = runCentrality
 %                                    each cell is an adjacency matrix or a
 %                                    3D matrix where the third dimension is
 %                                    an individual network
-%                      invweighted = for weighted networks, invert the
-%                                    weights (no effect on unweighted)
+%                         weighted = set to 0 for unweighted centrality 
+%                                    measures for weighted networks, invert the
+%                                    weights for measures which assume a
+%                                    higher edge weight value indicates 
+%                                    less importance (no effect on 
+%                                    unweighted networks).
 %                      runparallel = run in parallel if set to 1 (default
 %                                    is 0). Usefully when you have very
 %                                    large networks (> 1000 nodes)
@@ -28,7 +32,7 @@ function [centrality,Q,centrality_names,centrality_names_abbrev] = runCentrality
 % Stuart Oldham, Monash University, 2018
 
 if nargin < 2
-    invweighted = 0;
+    weighted = 0;
 end
 
 if nargin < 3
@@ -37,6 +41,10 @@ end
 
 if nargin < 4
     quiet = 0;
+end
+
+if nargin < 5
+   exclude = []; 
 end
 
 if ~iscell(Network)
@@ -57,41 +65,53 @@ if NumNets > 2
 end
     
 for i = 1:NumNets
-    adj = Network{i};
+    adj = NetCell{i};
     NumNodes = length(adj);
-    c = zeros(15,NumNodes);
-    if invweighted
+    c = zeros(17-length(exclude),NumNodes);
+    
+    if weighted == 2
        adj_inv = 1./adj;
        adj_inv(adj_inv == inf) = 0;
-    else
+    elseif weighted == 0
+        adj_inv = double(adj>0);
+        adj = double(adj>0);
+    elseif weighted == 1
         adj_inv = adj;
     end
     
-    if max(max(adj)) ~= 1
-        weighted = 1;
+    if weighted == 0
+        wei = 0;
     else
-        weighted = 0;
+        wei = 1;
     end
-    
-    c(1,:) = strengths_und(adj);
-    c(2,:) = betweenness_wei(adj_inv); 
-    c(3,:) = eigenvector_centrality_und(adj); 
-    c(4,:) = pagerank_centrality(adj,.85);
-    c(5,:) = closeness_wei(adj_inv);
-    c(6,:) = diag(communicability(adj,weighted,'network'));
-    c(7,:) = random_walk_centrality(adj); 
-    c(8,:) = h_index(adj); 
-    c(9,:) = leverage_centrality(adj);
-    c(10,:) = information_centrality(adj); 
-    c(11,:) = katz_centrality(adj);
-    c(12,:) = communicability(adj,weighted,'nodal'); 
-    c(13,:) = random_walk_betweenness(adj,runparallel); 
-    c(14,:) = communicability_betweenness(adj,runparallel); 
-    [M, c(15,:)] = run_modularity(adj,50,.4);
+    idx = 1;
+    if ~ismember(1,exclude); c(idx,:) = strengths_und(adj); idx = idx + 1; end
+    if ~ismember(2,exclude); c(idx,:) = betweenness_centrality(sparse(adj_inv)); idx = idx + 1; end
+    if ~ismember(3,exclude); c(idx,:) = eigenvector_centrality_und(full(adj)); idx = idx + 1; end 
+    if ~ismember(4,exclude); c(idx,:) = pagerank_centrality(adj,.85); idx = idx + 1; end
+    if ~ismember(5,exclude); c(idx,:) = closeness_wei(full(adj_inv)); idx = idx + 1; end
+    if ~ismember(6,exclude); c(idx,:) = diag(communicability(full(adj),wei,'network')); idx = idx + 1; end
+    if ~ismember(7,exclude); c(idx,:) = random_walk_centrality(adj); idx = idx + 1; end
+    if ~ismember(8,exclude); c(idx,:) = h_index(adj); idx = idx + 1; end
+    if ~ismember(9,exclude); c(idx,:) = leverage_centrality(adj); idx = idx + 1; end
+    if ~ismember(10,exclude); c(idx,:) = information_centrality(adj); idx = idx + 1; end 
+    if ~ismember(11,exclude); c(idx,:) = katz_centrality(adj); idx = idx + 1; end
+    if ~ismember(12,exclude); c(idx,:) = communicability(full(adj),wei,'nodal'); idx = idx + 1; end
+    if ~ismember(13,exclude); c(idx,:) = random_walk_betweenness(adj,runparallel); idx = idx + 1; end
+    if ~ismember(14,exclude); c(idx,:) = communicability_betweenness(full(adj),wei,runparallel); idx = idx + 1; end
+    if ~ismember(15,exclude)
+        [M, c(idx,:)] = run_modularity(adj,50,.4); 
+        idx = idx + 1; 
+        Q(i) = modularity_q(adj,M);
+    else
+        Q(i) = NaN;
+    end
+    if ~ismember(16,exclude); c(idx,:) = Laplacian_centrality(full(adj)); idx = idx + 1; end
+    if ~ismember(17,exclude); c(idx,:) = bridging_centrality(full(adj),c(2,:)); idx = idx + 1; end
     
     % The Q value is calculated on the consensus partition
     
-    Q(i) = modularity_q(adj,M);
+    
     
     if NumNets > 2
         centrality{i} = c;
@@ -118,3 +138,8 @@ centrality_names{12} = 'total communicability'; centrality_names_abbrev{12} = 'T
 centrality_names{13} = 'random-walk betweenness'; centrality_names_abbrev{13} = 'RWBC';
 centrality_names{14} = 'communicability betweenness'; centrality_names_abbrev{14} = 'CBC';
 centrality_names{15} = 'participation coefficient'; centrality_names_abbrev{15} = 'PC';
+centrality_names{16} = 'Laplacian'; centrality_names_abbrev{16} = 'LAPC';
+centrality_names{17} = 'Bridging'; centrality_names_abbrev{17} = 'BridC';
+
+centrality_names(exclude) = [];
+centrality_names_abbrev(exclude) = [];

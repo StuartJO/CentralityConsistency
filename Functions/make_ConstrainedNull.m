@@ -1,10 +1,6 @@
-function Null = make_ConstrainedNull(adj)
+function Null = make_ConstrainedNull(adj,weighted)
 
-
-
-if max(max(adj)) ~= 1
-    weighted = 1;
-else
+if nargin < 2
     weighted = 0;
 end
 

@@ -13,7 +13,7 @@ function c_Katz = katz_centrality(adj,a,b)
 %
 % Stuart Oldham, Monash University, 2017
 
-A = double(adj > 0);
+A = full(double(adj > 0));
 n = length(A);
 invmaxeig = 1/max(eig(A));
 

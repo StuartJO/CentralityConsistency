@@ -49,13 +49,13 @@ neighbours = cell(n,1);
 for i = 1:n
     neighbours{i} = find(A(i,:) > 0);
 end
-
+fprintf('Starting RWBC\n')
 if parallel
 I = num2cell(I);
         % Loop over every node to calculate the current flowing through it
         % for the given s and t
     parfor i = 1:n
-        %tic
+        tic
         for s = 1:n-1
             for t = s+1:n
                 if i == s || i == t
@@ -69,7 +69,7 @@ I = num2cell(I);
                 end
             end
         end
-        %toc
+        toc
     end
     I = cell2mat(I);
 else

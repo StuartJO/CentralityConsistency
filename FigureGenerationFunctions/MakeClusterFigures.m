@@ -1,31 +1,37 @@
-% This script will plot the figures showing the clustering result for a
-% network
+function MakeClusterFigures(Weighttype,NetworkNum,usecluster)
 
-varsbefore = who;
+MAINPATH = '/scratch/kg98/stuarto/CentralityConsistency-master';
+% Define path to the directory of the BCT
+BCTPATH = '/projects/kg98/stuarto/BCT';
+addpath(genpath(MAINPATH))
+addpath(genpath(BCTPATH))
 
-for i = 1:NumNetworks
+
+load(['Combined_',Weighttype,'_Network_results.mat'],'Networks','NormCentAll','NormCentNoRWCC','NetworksLinkages','NetworksCentClusters','NetworksDB','cent_names_abbrev')
+
 
     % Initialize variables
     
-    dataMatrix = NormCentAll{i};
-    dataMatrix2 = NormCentNoRWCC{i};
-    Z = NetworksLinkages{i}; 
-    D = NetworksCentClustDist{i};
-    Hclusters = NetworksCentClusters{i};
-    DB = NetworksDB{i};
+    dataMatrix = NormCentAll{NetworkNum};
+    dataMatrix2 = NormCentNoRWCC{NetworkNum};
+    Z = NetworksLinkages{NetworkNum}; 
+    %D = NetworksCentClustDist{NetworkNum};
+    Y = pdist(dataMatrix2,'euclidean');
+    D = squareform(Y);
+    Hclusters = NetworksCentClusters{NetworkNum};
+    DB = NetworksDB{NetworkNum};
     centrality_labels = cent_names_abbrev;
 
-    figure('units','pixels','outerposition',[0 0 1920 1080])
+    figure('units','pixels','outerposition',[0 0 2560 1440])
 
     % Get optimal node order and select desired cluster
-    
     order = optimalleaforder(Z,D);
-    chosen_clusters = Hclusters(:,use_clusters(i));
+    chosen_clusters = Hclusters(:,usecluster);
 
     % Order clusters by their average score
-    cluster_mean = zeros(use_clusters(i),1);
+    cluster_mean = zeros(usecluster,1);
 
-    for j = 1:use_clusters(i)
+    for j = 1:usecluster
         cluster_mean(j) = mean(mean(dataMatrix2(chosen_clusters==j,:)));
     end
 
@@ -36,7 +42,7 @@ for i = 1:NumNetworks
 
     obj_cluster = zeros(size(chosen_clusters));
     
-    for j = 1:use_clusters(i)
+    for j = 1:usecluster
         obj_cluster(chosen_clusters==mean_cluster_order(j)) = j;
     end
 
@@ -45,7 +51,7 @@ for i = 1:NumNetworks
     % Plot DB values
     subplot(6,6,[3 4 9 10])
 
-    h(1) = scatter(use_clusters(i),DB(use_clusters(i)),'r','filled');
+    h(1) = scatter(usecluster,DB(usecluster),'r','filled');
     hold on
     h(2) = plot(DB,'-o','MarkerFaceColor',lines(1),'Color',lines(1));
     ylabel('DB values','Fontsize',14)
@@ -56,10 +62,10 @@ for i = 1:NumNetworks
     
     ax = subplot(6,6,[1 2 7 8]);
 
-    clustergram_distances(D,Z,[2 use_clusters(i)],'',[make_cmap('orangered',50,30,0);flipud(make_cmap('steelblue',50,30,0))],'Euclidean distance',ax);
+    clustergram_distances(D,Z,[2 usecluster],'',[make_cmap('orangered',50,30,0);flipud(make_cmap('steelblue',50,30,0))],'Euclidean distance',ax);
 
-    if use_clusters(i) < 8
-    cmap2 = cbrewer('qual','Set1',use_clusters(i));
+    if usecluster < 8
+    cmap2 = cbrewer('qual','Set1',usecluster);
     else
         cmap2 = [cbrewer('qual','Set1',9); 0 0.5 0];
     end
@@ -81,7 +87,7 @@ for i = 1:NumNetworks
     chosen_clusters2 = Hclusters(:,2);
 
     obj_ord2 = obj_ord;
-    cluster_ord2 = chosen_clusters2(order);
+    cluster_ord2 = chosen_clusters2(obj_ord);
 
     plotClusteredData(dataMatrix(obj_ord2,var_order),cluster_ord2,[],[make_cmap('steelblue',50,30,0);flipud(make_cmap('orangered',50,30,0))],[0 0 0; .5 .5 .5],'Normalised Centrality','','',ax3);
 
@@ -89,27 +95,7 @@ for i = 1:NumNetworks
     
     subplot(6,6,[15:18 21:24 27:30 34:36])
 
-    if i == 5
-        load air500locations.mat
-        airport_network_worldplot(Networks{i},air500labels,obj_cluster);
-        colormap(cmap2);
-        axis off
-    elseif ismember(i,[14 15])
-        COG = dlmread('BrainNodeCoords.txt');
-        G = graph(Networks{i});
-        g = plot(G,'Xdata',COG(:,1),'YData',COG(:,2));
-        g.NodeCData = obj_cluster;
-        g.EdgeAlpha = .5;
-        g.LineWidth = .5;
-        g.MarkerSize = 6;
-        g.EdgeColor = [.5 .5 .5];
-        g.NodeLabel = {};
-        colormap(cmap2);
-        xlim([-110 110])
-        ylim([-100 75])
-        axis off
-    else
-        G = graph(Networks{i});
+        G = graph(Networks{NetworkNum});
         g = plot(G,'Layout','force');    
         g.NodeCData = obj_cluster;
         g.EdgeAlpha = .5;
@@ -117,19 +103,10 @@ for i = 1:NumNetworks
         g.MarkerSize = 6;
         g.EdgeColor = [.5 .5 .5];
         g.NodeLabel = {};
-        colormap(cmap2);
+        colormap(gca,cmap2);
         XData = g.XData;
         YData = g.YData;
         xlim([min(XData) max(XData)])
         ylim([min(YData) max(YData)])
         axis off
-    end
 
-print(sprintf('%s_clusterfig.png',net_abbrevname{i}),'-dpng')
-
-end
-
-% Removes variables created by this script
-varsafter = who; 
-varsnew = setdiff(varsafter, varsbefore); 
-clear(varsnew{:})

@@ -24,7 +24,7 @@ function [A,Edges] = random_connected_network(N,E,W,quiet)
 %               W                   A vector of edge weights (the length of
 %                                   the vector must match the number of
 %                                   edges requested)
-%               quiet               Set to 1 to trun of any messgaes the
+%               quiet               Set to 1 to turn off any messgaes the
 %                                   code outputs
 %
 % Output:       A                   A fully connected random network
@@ -51,12 +51,12 @@ if length(N) > 1
     CIJ = N;
     E = nnz(triu(CIJ,1)); 
     N = length(CIJ);
-    if max(max(CIJ)) ~= 1
+    if length(unique(CIJ)) ~= 2
         triu_CIJ = triu(CIJ,1);
         if ~isempty(W)
-            warning('Input matrix is weighted and a vector of weights was also provided. Defaulting to the input network weights')
-            W = CIJ(triu_CIJ > 0);
+            warning('Input matrix is weighted and a vector of weights was also provided. Defaulting to the input network weights')            
         end
+        W = CIJ(triu_CIJ > 0);
     else
         W = [];
     end

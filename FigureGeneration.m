@@ -4,67 +4,71 @@
 
 % This script also uses colormaps from cbrewer
 
-% This script requires the outputs of MainAnalysisScript.m to be loaded in
-% the Workspace
-
-MAINPATH = './Centrality_code';
-
-addpath(MAINPATH)
-
-% Set the clusters to select for the clustering pictures
-
-% Note the colormap only works for up to 10 clusters 
-
-use_clusters = [4 3 5 10 8 6 6 3 6 5 7 8 3 3 4];
-
-%% Initial setup of variable required
-lines_colormap = lines(7);
-netcolor{1} = lines_colormap(1,:);
-netcolor{2} = lines_colormap(1,:);
-netcolor{3} = lines_colormap(1,:);
-netcolor{4} = lines_colormap(2,:);
-netcolor{5} = lines_colormap(3,:);
-netcolor{6} = lines_colormap(1,:);
-netcolor{7} = lines_colormap(4,:);
-netcolor{8} = lines_colormap(2,:);
-netcolor{9} = lines_colormap(2,:);
-netcolor{10} = lines_colormap(2,:);
-netcolor{11} = lines_colormap(1,:);
-netcolor{12} = lines_colormap(2,:);
-netcolor{13} = lines_colormap(2,:);
-netcolor{14} = lines_colormap(4,:);
-netcolor{15} = lines_colormap(4,:);
-
 %% Figure 2
 
-MakeFigure2_top
-print('Figure2top.png','-dpng')
-MakeFigure2_bottom
-print('Figure2bottom.png','-dpng')
+MakeFigure2
+
 %% Figure 3
 
 MakeFigure3
-print('Figure3.png','-dpng')
-%% Figure 4
 
-MakeFigure4
-print('Figure4.png','-dpng')
-%% Figure 5
+%% Figure 4 and S7
 
-MakeFigure5
-print('Figure5.png','-dpng')
-%% Figure 6
+MakeFigure4_S7
 
-MakeFigure6
-print('Figure6.png','-dpng')
-%% Figure 7-8, S3-S15
+%% Figure 5 and 6
+
+MakeFigure5_6
+
+%% Figure 7-8, S12-S17
 
 % Note when making the figure of the airport network it will flash up a
 % warning. Figure will produce just fine however.
 
-MakeClusterFigures
+MakeClusterFigures('Unweighted',72,8)
+print('Figure7.png','-dpng','-r300')
 
-%% Figure S1
+MakeClusterFigures('Unweighted',127,3)
+print('Figure8.png','-dpng','-r300')
 
-MakeFigureS1
-print('Figures1.png','-dpng')
+MakeClusterFigures('Unweighted',12,6)
+print('FigureS12.png','-dpng','-r300')
+
+MakeClusterFigures('Unweighted',23,9)
+print('FigureS13.png','-dpng','-r300')
+
+MakeClusterFigures('Unweighted',206,7)
+print('FigureS14.png','-dpng','-r300')
+
+MakeClusterFigures('Unweighted',13,3)
+print('FigureS15.png','-dpng','-r300')
+
+MakeClusterFigures('Unweighted',20,3)
+print('FigureS16.png','-dpng','-r300')
+
+MakeClusterFigures('Unweighted',52,3)
+print('FigureS17.png','-dpng','-r300')
+
+%% Figure S2
+
+MakeFigureS2
+
+%% Figure S3
+
+MakeFigureS3
+
+%% Figure S4 and S5
+
+MakeFigureS4_S5
+
+%% Figure S6 and S8
+
+MakeFigureS6_S8
+
+%% Figure S9
+
+MakeFigureS9
+
+%% Figure S10 and S11
+
+MakeFigureS10_S11

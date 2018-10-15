@@ -41,12 +41,12 @@ if ~weighted
 bin = double(A > 0);
     switch measure
         case 'network'
-           G = expm(bin);
+           G = gexpm(bin);
         case 'nodal'
-           G = sum(expm(bin),2);
+           G = sum(gexpm(bin),2);
         case 'global'
            N = length(bin);
-           g = expm(bin);
+           g = gexpm(bin);
            EYE = logical(eye(N,N));
            G = mean(g(~EYE));
         otherwise
@@ -57,12 +57,12 @@ else
    red_adj = (S^-.5)*A*(S^-.5);
     switch measure
         case 'network'
-           G = expm(red_adj);
+           G = gexpm(red_adj);
         case 'nodal'
-           G = sum(expm(red_adj),2);
+           G = sum(gexpm(red_adj),2);
         case 'global'
            N = length(A);
-           g = expm(red_adj);
+           g = gexpm(red_adj);
            EYE = logical(eye(N,N));
            G = mean(g(~EYE));
         otherwise
