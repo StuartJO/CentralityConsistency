@@ -13,4 +13,4 @@ MainAnalysisScript.m will run all analyses performed in the paper. Running this 
 
 FigureGeneration.m will reproduce all figures from the paper.
 
-The data used in the paper can be found [here](https://figshare.com/s/22c5b72b574351d03edf)
+The data used in the paper can be found [here](https://figshare.com/s/22c5b72b574351d03edf). Simply make sure it is added to the path so data can be accessed.
