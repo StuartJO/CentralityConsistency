@@ -1,4 +1,4 @@
-% Make figure S9
+% Make figure S12
 
 varsbefore = who;
 
@@ -43,7 +43,7 @@ c = colorbar('eastoutside','Fontsize',14);
 c.Label.String = 'Spearman correlation'; 
 c.Position = [0.9231    0.1620    0.0201    0.6791];
 
-print('FigureS9.tif','-dtiff','-r300')
+print('FigureS12.tif','-dtiff','-r300')
 
 % Removes variables created by this script
 varsafter = who; 

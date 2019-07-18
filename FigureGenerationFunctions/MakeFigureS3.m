@@ -22,7 +22,7 @@ Cmap = [121 85 72; 3 168 243; 74 174 78; 103 58 182; 176 176 176; 252 133 95]/25
 % Get all the CMCs for each unweighted network
 
 for i = 1:212
-CorrVecs(:,i) = triu2vec(NetworksCentCorrCell{sortedCMCinds(i)},1);
+    CorrVecs(:,i) = triu2vec(NetworksCentCorrCell{sortedCMCinds(i)},1);
 end
 
 figure('units','pixels','outerposition',[0 0 2560 1440])
@@ -47,8 +47,6 @@ hold on
 boxplot(CorrVecs(:,1:106),'Colors','k','Symbol','k.') 
 
 set(gca,'xtick',[])
-
-%xticklabels(sortedCMCinds(1:106))
 
 xtickangle(90)
 
@@ -81,8 +79,6 @@ hold on
 boxplot(CorrVecs(:,107:212),'Colors','k','Symbol','k.') 
 
 set(gca,'xtick',[])
-
-%xticklabels(sortedCMCinds(107:212))
 
 xtickangle(90)
 
@@ -137,8 +133,6 @@ boxplot(CorrVecs,'Colors','k','Symbol','k.')
 
 set(gca,'xtick',[])
 
-%xticklabels(sortedCMCinds)
-
 xtickangle(90)
 
 title('Weighted')
@@ -161,7 +155,7 @@ xlim([xlimits(1)-.5 xlimits(2)+.5])
 
 set(gca,'FontSize',16)
 
-print('FigureS3.png','-dpng','-r300')
+print('FigureS3.tif','-dtiff','-r300')
 
 % Removes variables created by this script
 varsafter = who; 

@@ -1,19 +1,21 @@
-% makes figure 5 and 6
+% makes figure S13 and S14
 
 varsbefore = who;
 
-load('Combined_Unweighted_surrogate_results.mat')
+load('Combined_Weighted_surrogate_results.mat')
 
 Cmap = [121 85 72; 3 168 243; 74 174 78; 103 58 182; 176 176 176; 252 133 95]/255;
+
 for j = 1:2
 
 if j == 1
     surrogate_type = 'unconstrained';
-    printname = 'Figure5.tif';
+    savename = 'FigureS13.tif';
 else
     surrogate_type = 'constrained';
-    printname = 'Figure6.tif';
+    savename = 'FigureS14.tif';
 end
+
 for i = 1:length(Networks)
     % Calculate difference between surrogates and empirical network
     % properties and CMCs
@@ -22,7 +24,9 @@ for i = 1:length(Networks)
     Nullstd(i,:) = std(NullNetProperty{i,j});
    
 end
+
 figure('units','pixels','outerposition',[0 0 2560 1440])
+
 for k = 1:8
     subplot(2,4,k)
     if k == 3
@@ -45,7 +49,7 @@ for k = 1:8
     end
     set(gca,'Fontsize',16)
 end
-print(printname,'-dtiff','-r300')
+print(savename,'-dtiff','-r300')
 end
 
 varsafter = who; 

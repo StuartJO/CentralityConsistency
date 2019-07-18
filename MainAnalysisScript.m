@@ -298,3 +298,41 @@ end
 %% Run GLM
 
 RunGLM
+
+%% Run PCA
+
+load(['Combined_',weighttype,'_Network_results.mat'])
+NumNetworks = length(Networks);
+
+for i = 1:NumNetworks  
+
+[PCloadings{i},score{i},~,~,var_explained{i}] = pca(zscore(NetworksCent{i}([1:6 8:17],:)'));
+
+first3PCs(i,:) = var_explained{i}(1:3);
+
+end
+
+save(['Combined_',weighttype,'_Network_PCA_results.mat'],'PCloadings','score','var_explained','first3PCs')
+
+load('Combined_Unweighted_Network_results.mat','Networks_mwCMC','NetworksCent','cent_names_abbrev')
+
+load('Weighted_Networks.mat','Corresponding_unweighted')
+
+UnweightedCents = NetworksCent(Corresponding_unweighted);
+UnweightedmwCMC = Networks_mwCMC(Corresponding_unweighted);
+load('Combined_Weighted_Network_results.mat','NetworksCent','Networks_mwCMC')
+WeightedCents = NetworksCent;
+WeightedmwCMC = Networks_mwCMC;
+
+Cents = cell(length(Corresponding_unweighted),1);
+NetworksCentCorrCell = cell(length(Corresponding_unweighted),1);
+
+for i = 1:length(Corresponding_unweighted)
+    Cents{i} = [UnweightedCents{i}; WeightedCents{i}];
+    [PCloadings{i},score{i},~,~,var_explained] = pca(zscore(Cents{i}([1:6 8:17 18:23 25:34],:)'));
+    CentCorr = corr(Cents{i}','Type','Spearman'); 
+    CentCorr(isnan(CentCorr)) = 0;
+    NetworksCentCorrCell{i} = CentCorr;
+    NetworksCentCorr(:,:,i) = CentCorr;
+end
+

@@ -1,4 +1,4 @@
-% Make Figure S6 and S8
+% Make Figure S7 and S9
 
 varsbefore = who;
 
@@ -43,7 +43,7 @@ for i = 1:8
     end
     set(gca,'FontSize',20)
 end
-print('FigureS6.tif','-dtiff','-r300')
+print('FigureS7.tif','-dtiff','-r300')
 
 % Make post hoc plot of correlations between network properties and
 % individual CMCs
@@ -118,7 +118,7 @@ end
 c = colorbar(ax1,'eastoutside','Fontsize',14); c.Label.String = 'Spearman correlation'; 
 c.Ticks = -1:.25:1;
 c.Position = [0.914115646123995,0.088962108731466,0.012885923734717,0.858464209898964];
-print('FigureS8.tif','-dtiff','-r300')
+print('FigureS9.tif','-dtiff','-r300')
 
 % Removes variables created by this script
 varsafter = who; 

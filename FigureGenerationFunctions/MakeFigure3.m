@@ -10,7 +10,9 @@ load('Combined_Unweighted_Network_results.mat','mean_corr_unweighted','var_corr_
 
 cent_ind = BF_ClusterReorder(mean_corr_unweighted,'corr');
 
-figure('units','pixels','outerposition',[0 0 1080 1080])
+%figure('units','pixels','outerposition',[0 0 1080 1080])
+
+figure('units','pixels','outerposition',[0 0 2250 1080])
 
 % Make colour maps
 
@@ -18,7 +20,7 @@ nice_cmap = [make_cmap('steelblue',50,30,0);flipud(make_cmap('orangered',50,30,0
 
 positive_cmap = flipud(make_cmap('orangered',50,30,0));
 
-subplot(2,2,1)
+subplot(1,4,1)
 
 data = mean_corr_unweighted;
 
@@ -33,16 +35,16 @@ imagesc(data(cent_ind,cent_ind))
 axis square
 colormap(gca,nice_cmap)
 caxis([-1 1])
-c = colorbar(gca,'Fontsize',14); c.Label.String = 'Spearman correlation'; 
+c = colorbar(gca,'Fontsize',10); c.Label.String = 'Spearman correlation'; 
 fig_name = {'Mean Spearman correlation';'across unweighted networks'};
-title(fig_name,'interpreter','none','Fontsize',15)
+title(fig_name,'interpreter','none','Fontsize',14)
 xticks(1:Num_cents)
 yticks(1:Num_cents)
 xticklabels(cent_labels)
 xtickangle(90)
 yticklabels(cent_labels)
 
-subplot(2,2,2)
+subplot(1,4,2)
 
 data = var_corr_unweighted;
 
@@ -54,16 +56,16 @@ axis square
 colormap(gca,positive_cmap)
 %caxis([min(min(data)) max(max(data))])
 caxis([0 .5])
-c = colorbar(gca,'Fontsize',14); c.Label.String = 'Standard deviation'; 
+c = colorbar(gca,'Fontsize',10); c.Label.String = 'Standard deviation'; 
 fig_name = {'Spearman correlation standard';'deviation across unweighted networks'};
-title(fig_name,'interpreter','none','Fontsize',15)
+title(fig_name,'interpreter','none','Fontsize',14)
 xticks(1:Num_cents)
 yticks(1:Num_cents)
 xticklabels(cent_labels)
 xtickangle(90)
 yticklabels(cent_labels)  
 
-subplot(2,2,3)
+subplot(1,4,3)
   
 % Plot matrix of mean between-network CMCs in weighted networks
 
@@ -76,16 +78,16 @@ axis square
 
 colormap(gca,nice_cmap)
 caxis([-1 1])
-c = colorbar(gca,'Fontsize',14); c.Label.String = 'Spearman correlation'; 
+c = colorbar(gca,'Fontsize',10); c.Label.String = 'Spearman correlation'; 
 fig_name = {'Mean Spearman correlation';'across weighted networks'};
-title(fig_name,'interpreter','none','Fontsize',15)
+title(fig_name,'interpreter','none','Fontsize',14)
 xticks(1:Num_cents)
 yticks(1:Num_cents)
 xticklabels(cent_labels)
 xtickangle(90)
 yticklabels(cent_labels)
 
-subplot(2,2,4)
+subplot(1,4,4)
 
 % Plot matrix of the standard deviations of correlations across weighted
 % networks
@@ -97,16 +99,16 @@ axis square
 colormap(gca,positive_cmap)
 %caxis([min(min(data)) max(max(data))])
 caxis([0 .5])
-c = colorbar(gca,'Fontsize',14); c.Label.String = 'Standard deviation'; 
+c = colorbar(gca,'Fontsize',10); c.Label.String = 'Standard deviation'; 
 fig_name = {'Spearman correlation standard';'deviation across weighted networks'};
-title(fig_name,'interpreter','none','Fontsize',15)
+title(fig_name,'interpreter','none','Fontsize',14)
 xticks(1:Num_cents)
 yticks(1:Num_cents)
 xticklabels(cent_labels)
 xtickangle(90)
 yticklabels(cent_labels)
 
-print('Figure3.png','-dpng','-r300')
+print('Figure3.tif','-dtiff','-r300')
 
 % Removes variables created by this script
 varsafter = who; 

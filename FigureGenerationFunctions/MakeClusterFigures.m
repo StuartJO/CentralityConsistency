@@ -23,6 +23,7 @@ load(['Combined_',Weighttype,'_Network_results.mat'],'Networks','NormCentAll','N
     centrality_labels = cent_names_abbrev;
 
     figure('units','pixels','outerposition',[0 0 2560 1440])
+    %figure('units','pixels','outerposition',[0 0 1600 900])
 
     % Get optimal node order and select desired cluster
     order = optimalleaforder(Z,D);

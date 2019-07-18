@@ -4,6 +4,12 @@
 
 % This script also uses colormaps from cbrewer
 
+%% Initial setup
+% Define these variables for your own environment and desired parameters
+% Define path to the directory of this script
+MAINPATH = '/scratch/kg98/stuarto/CentralityConsistency-master';
+addpath(genpath(MAINPATH))
+
 %% Figure 2
 
 MakeFigure2
@@ -26,28 +32,28 @@ MakeFigure5_6
 % warning. Figure will produce just fine however.
 
 MakeClusterFigures('Unweighted',72,8)
-print('Figure7.png','-dpng','-r300')
+print('Figure7.tif','-dtiff','-r300')
 
 MakeClusterFigures('Unweighted',127,3)
-print('Figure8.png','-dpng','-r300')
+print('Figure8.tif','-dtiff','-r300')
 
 MakeClusterFigures('Unweighted',12,6)
-print('FigureS12.png','-dpng','-r300')
+print('FigureS15.tif','-dtiff','-r300')
 
 MakeClusterFigures('Unweighted',23,9)
-print('FigureS13.png','-dpng','-r300')
+print('FigureS16.tif','-dtiff','-r300')
 
 MakeClusterFigures('Unweighted',206,7)
-print('FigureS14.png','-dpng','-r300')
+print('FigureS17.tif','-dtiff','-r300')
 
 MakeClusterFigures('Unweighted',13,3)
-print('FigureS15.png','-dpng','-r300')
+print('FigureS18.tif','-dtiff','-r300')
 
 MakeClusterFigures('Unweighted',20,3)
-print('FigureS16.png','-dpng','-r300')
+print('FigureS19.tif','-dtiff','-r300')
 
 MakeClusterFigures('Unweighted',52,3)
-print('FigureS17.png','-dpng','-r300')
+print('FigureS20.tif','-dtiff','-r300')
 
 %% Figure S2
 
@@ -57,18 +63,26 @@ MakeFigureS2
 
 MakeFigureS3
 
-%% Figure S4 and S5
+%% Figure S4
 
-MakeFigureS4_S5
+MakeFigureS4
 
-%% Figure S6 and S8
+%% Figure S5 and S6
 
-MakeFigureS6_S8
+MakeFigureS5_S6
 
-%% Figure S9
+%% Figure S7 and S9
 
-MakeFigureS9
+MakeFigureS7_S9
 
 %% Figure S10 and S11
 
 MakeFigureS10_S11
+
+%% Figure S12
+
+MakeFigureS12
+
+%% Figure S13 and S14
+
+MakeFigureS13_S14

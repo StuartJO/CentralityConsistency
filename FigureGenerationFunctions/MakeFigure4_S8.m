@@ -1,8 +1,8 @@
-% Make Figure S6 and S8
+% Make figures 4 and S8
 
 varsbefore = who;
 
-weighting = 'Weighted';
+weighting = 'Unweighted';
 
 % Load in results
 
@@ -15,7 +15,9 @@ NumNetworks = length(Networks);
 Cmap = [121 85 72; 3 168 243; 74 174 78; 103 58 182; 176 176 176; 252 133 95]/255;
 
 figure('units','pixels','outerposition',[0 0 2560 1440])
+
 for i = 1:8
+    
     subplot(2,4,i)
 
     % Plot scatter plot of network properties vs CMC
@@ -43,7 +45,7 @@ for i = 1:8
     end
     set(gca,'FontSize',20)
 end
-print('FigureS6.tif','-dtiff','-r300')
+print('Figure4.tif','-dtiff','-r300')
 
 % Make post hoc plot of correlations between network properties and
 % individual CMCs
@@ -115,6 +117,7 @@ for k = 1:8
     yticks(ax2,[])    
     set(ax1,'FontSize',20)
 end
+
 c = colorbar(ax1,'eastoutside','Fontsize',14); c.Label.String = 'Spearman correlation'; 
 c.Ticks = -1:.25:1;
 c.Position = [0.914115646123995,0.088962108731466,0.012885923734717,0.858464209898964];
