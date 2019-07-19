@@ -3,8 +3,8 @@ function [dk,d] = CorrConjDegSeq(degseq)
 % This function calculate the corrected conjugated sequence. For a node in
 % position k in the degree sequence, the conjugated sequence describes how 
 % many nodes before it in the degree sequence have a degree greater than 
-% k-1, and how many nodes following it in the degree sequence have a degree 
-% greater than k
+% or equal to k-1, and how many nodes following it in the degree sequence 
+% have a degree greater than or equal to k
 
 % Input:                            degseq = degree sequence
 %
