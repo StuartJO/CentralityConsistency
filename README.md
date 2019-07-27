@@ -2,6 +2,8 @@
 
 The files in this directory are able to rerun all analyses performed in Oldham et al., 2019. Consistency and differences between centrality measures across distinct classes of networks.
 
+Paper can be found [here](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0220061)
+
 If you have questions please contact Stuart by [email](mailto:stuart.oldham@monash.edu)
 
 Dependencies:
